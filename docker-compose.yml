@@ -1,0 +1,37 @@
+services:
+  solution1:
+    image: nginx:latest
+    container_name: solution1
+    ports:
+      - "8081:80"
+    volumes:
+      - ./nginx/solution1.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - nginx_net
+
+  solution2:
+    image: nginx:latest
+    container_name: solution2
+    ports:
+      - "8082:80"
+    volumes:
+      - ./nginx/solution2.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - nginx_net
+
+  reverse_proxy:
+    image: nginx:latest
+    container_name: reverse_proxy
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/reverse_proxy.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - solution1
+      - solution2
+    networks:
+      - nginx_net
+
+networks:
+  nginx_net:
+    driver: bridge
